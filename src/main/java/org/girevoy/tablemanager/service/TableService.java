@@ -6,4 +6,5 @@ import org.springframework.http.ResponseEntity;
 public interface TableService {
     ResponseEntity<String> create(Table table);
     ResponseEntity<String> delete(String tableName);
+    ResponseEntity<String> rename(String oldName, String newName);
 }

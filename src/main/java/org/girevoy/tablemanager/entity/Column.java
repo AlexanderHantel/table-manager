@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 public class Column {
     private String name;
+    private Table table;
     private DataType dataType;
 
     public void setDataType(String dataType) {

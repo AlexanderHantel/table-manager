@@ -21,7 +21,6 @@ public class TableDao {
 
     public void create(Table table) {
         String sqlQuery = getCreateQuery(table);
-
         jdbcTemplate.update(sqlQuery);
     }
 
@@ -41,7 +40,11 @@ public class TableDao {
 
     public void delete(String tableName) {
         String sqlQuery = format("DROP TABLE %s", tableName);
+        jdbcTemplate.update(sqlQuery);
+    }
 
+    public void rename(String oldName, String newName) {
+        String sqlQuery = format("ALTER TABLE %s RENAME TO %s", oldName, newName);
         jdbcTemplate.update(sqlQuery);
     }
 }

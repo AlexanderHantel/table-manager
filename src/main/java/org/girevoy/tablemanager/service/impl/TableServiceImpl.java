@@ -24,6 +24,7 @@ public class TableServiceImpl implements TableService {
             tableDao.create(table);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (BadSqlGrammarException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
     }
@@ -34,6 +35,18 @@ public class TableServiceImpl implements TableService {
             tableDao.delete(tableName);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (BadSqlGrammarException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> rename(String oldName, String newName) {
+        try {
+            tableDao.rename(oldName, newName);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (BadSqlGrammarException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
     }
