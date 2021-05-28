@@ -1,7 +1,7 @@
 package org.girevoy.tablemanager.service.impl;
 
 import org.girevoy.tablemanager.dao.TableDao;
-import org.girevoy.tablemanager.entity.Table;
+import org.girevoy.tablemanager.model.table.Table;
 import org.girevoy.tablemanager.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

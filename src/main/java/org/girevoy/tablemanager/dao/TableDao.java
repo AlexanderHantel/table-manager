@@ -1,7 +1,7 @@
 package org.girevoy.tablemanager.dao;
 
-import org.girevoy.tablemanager.entity.Column;
-import org.girevoy.tablemanager.entity.Table;
+import org.girevoy.tablemanager.model.table.Column;
+import org.girevoy.tablemanager.model.table.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

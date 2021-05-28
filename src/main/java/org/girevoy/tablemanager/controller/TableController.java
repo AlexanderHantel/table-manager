@@ -1,6 +1,6 @@
 package org.girevoy.tablemanager.controller;
 
-import org.girevoy.tablemanager.entity.Table;
+import org.girevoy.tablemanager.model.table.Table;
 import org.girevoy.tablemanager.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +22,6 @@ public class TableController {
     public TableController(TableService tableService) {
         this.tableService = tableService;
     }
-
-//    @GetMapping("/new")
-//    public String showCreateTablePage(Model model) {
-//        List<DataType> dataTypes = List.of(DataType.INT, DataType.TEXT, DataType.DATE);
-//        model.addAttribute("table", new Table());
-//        model.addAttribute("dataTypes", dataTypes);
-//        model.addAttribute("column1", new Column());
-//        model.addAttribute("column2", new Column());
-//        model.addAttribute("column3", new Column());
-//        model.addAttribute("column4", new Column());
-//        model.addAttribute("column5", new Column());
-//
-//
-//        return "/table/new";
-//    }
 
     @PostMapping
     public ResponseEntity<String> createTable(@RequestBody Table table) {

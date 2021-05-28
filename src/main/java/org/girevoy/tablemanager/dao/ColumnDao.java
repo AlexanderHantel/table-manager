@@ -1,11 +1,13 @@
 package org.girevoy.tablemanager.dao;
 
-import org.girevoy.tablemanager.entity.Column;
+import org.girevoy.tablemanager.model.table.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import static java.lang.String.format;
 
+@Component
 public class ColumnDao {
     private JdbcTemplate jdbcTemplate;
 
@@ -15,7 +17,7 @@ public class ColumnDao {
     }
 
     public void add(Column column) {
-        String sqlQuery = format("ALTER TABLE %s ADD %s TYPE %s",
+        String sqlQuery = format("ALTER TABLE %s ADD IF NOT EXISTS %s %s",
                 column.getTable().getName(), column.getName(), column.getDataType().name());
         jdbcTemplate.update(sqlQuery);
     }
@@ -27,13 +29,13 @@ public class ColumnDao {
     }
 
     public void rename(Column column, String newColumnName) {
-        String sqlQuery = format("ALTER TABLE %s RENAME COLUMN %s TYPE %s",
+        String sqlQuery = format("ALTER TABLE %s RENAME COLUMN %s TO %s",
                 column.getTable().getName(), column.getName(), newColumnName);
         jdbcTemplate.update(sqlQuery);
     }
 
     public void changeType(Column column) {
-        String sqlQuery = format("ALTER TABLE %s ALTER COLUMN %s TYPE %s",
+        String sqlQuery = format("ALTER TABLE %s ALTER COLUMN %2$s TYPE %3$s USING (\"%2$s\"::text::%3$s)",
                 column.getTable().getName(), column.getName(), column.getDataType().name());
         jdbcTemplate.update(sqlQuery);
     }

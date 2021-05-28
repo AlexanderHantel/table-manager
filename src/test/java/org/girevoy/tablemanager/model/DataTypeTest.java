@@ -1,5 +1,6 @@
-package org.girevoy.tablemanager.entity;
+package org.girevoy.tablemanager.model;
 
+import org.girevoy.tablemanager.model.table.enums.DataType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

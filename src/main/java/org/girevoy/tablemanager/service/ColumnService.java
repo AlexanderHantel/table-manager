@@ -1,6 +1,6 @@
 package org.girevoy.tablemanager.service;
 
-import org.girevoy.tablemanager.entity.Column;
+import org.girevoy.tablemanager.model.table.Column;
 import org.springframework.http.ResponseEntity;
 
 public interface ColumnService {

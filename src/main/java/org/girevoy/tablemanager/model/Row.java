@@ -1,4 +1,4 @@
-package org.girevoy.tablemanager.entity;
+package org.girevoy.tablemanager.model;
 
 import java.util.Optional;
 

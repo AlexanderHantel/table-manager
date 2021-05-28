@@ -1,9 +1,10 @@
-package org.girevoy.tablemanager.entity;
+package org.girevoy.tablemanager.model.table;
 
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.girevoy.tablemanager.model.Row;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,9 +1,10 @@
-package org.girevoy.tablemanager.entity;
+package org.girevoy.tablemanager.model.table;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.girevoy.tablemanager.model.table.enums.DataType;
 import org.springframework.stereotype.Component;
 
 @Component

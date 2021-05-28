@@ -1,6 +1,6 @@
 package org.girevoy.tablemanager.service;
 
-import org.girevoy.tablemanager.entity.Table;
+import org.girevoy.tablemanager.model.table.Table;
 import org.springframework.http.ResponseEntity;
 
 public interface TableService {
