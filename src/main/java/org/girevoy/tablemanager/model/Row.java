@@ -1,13 +1,24 @@
 package org.girevoy.tablemanager.model;
 
-import java.util.Optional;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
 
+@Component
+@Getter
+@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Row {
     private int id;
-    private Optional<Object> column1;
-    private Optional<Object> column2;
-    private Optional<Object> column3;
-    private Optional<Object> column4;
-    private Optional<Object> column5;
+    private String tableName;
+    private Map<String, Object> attributes;
 
+    public Row() {
+        attributes = new LinkedHashMap<>();
+    }
 }
