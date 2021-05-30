@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 @Setter
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Row {
+public class EntityRow {
     private int id;
     private String tableName;
     private Map<String, Object> attributes;
 
-    public Row() {
+    public EntityRow() {
         attributes = new LinkedHashMap<>();
     }
 }
