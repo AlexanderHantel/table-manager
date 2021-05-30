@@ -1,23 +1,16 @@
 package org.girevoy.tablemanager.dao;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 import org.girevoy.tablemanager.model.EntityRow;
+import org.girevoy.tablemanager.model.mapper.ColumnMapper;
 import org.girevoy.tablemanager.model.mapper.EntityRowMapper;
 import org.girevoy.tablemanager.model.table.Column;
-import org.girevoy.tablemanager.model.table.Table;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -37,18 +30,11 @@ public class EntityRowDao {
         if (entityRow == null || entityRow.getTableName() == null || entityRow.getAttributes().isEmpty()) {
             throw new Exception();
         }
-
-        PreparedStatementCreatorFactory creatorFactory = new PreparedStatementCreatorFactory(
-                getInsertQuery(entityRow));
-        creatorFactory.setReturnGeneratedKeys(true);
-        PreparedStatementCreator creator = creatorFactory.newPreparedStatementCreator(new ArrayList<>());
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(creator, keyHolder);
+        jdbcTemplate.update(
+                connection -> connection.prepareStatement(getQueryForInsert(entityRow), new String[] {"id"}), keyHolder);
+        entityRow.setId((long) Objects.requireNonNull(keyHolder.getKeys()).get("id"));
 
-        long l = (long) keyHolder.getKeys().get("id");
-
-        entityRow.setId((int) l);
         return entityRow;
     }
 
@@ -58,48 +44,30 @@ public class EntityRowDao {
     }
 
     public int update(EntityRow entityRow) {
-        String sql = getUpdateQuery(entityRow);
+        String sql = getQueryForUpdate(entityRow);
         return jdbcTemplate.update(sql);
+    }
+
+    public EntityRow findInTableById(String tableName, long id) {
+        String sql = format("SELECT * FROM %s WHERE id=%s;", tableName, id);
+        List<Column> columns = getColumns(tableName);
+
+        return jdbcTemplate.queryForObject(sql, new EntityRowMapper(columns));
     }
 
     public List<EntityRow> findAll(String tableName) {
         String sql = "SELECT * FROM " + tableName + ";";
-        List<Column> columns = new ArrayList();
-        jdbcTemplate.query(sql, new ResultSetExtractor() {
-
-            @Override
-            public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-                ResultSetMetaData metaData = rs.getMetaData();
-                int columnCount = metaData.getColumnCount();
-                for(int i = 1 ; i <= columnCount ; i++){
-                    Column column = new Column();
-                    column.setName(metaData.getColumnName(i));
-                    String dataTypeName = metaData.getColumnTypeName(i);
-
-                    if (dataTypeName.equals("int4") || dataTypeName.equals("bigserial")) {
-                        column.setDataType("INT");
-                    } else {
-                        if (dataTypeName.equals("date")) {
-                            column.setDataType("DATE");
-                        } else {
-                            if (dataTypeName.equals("text")) {
-                                column.setDataType("TEXT");
-                            }
-                        }
-                    }
-                    Table table = new Table();
-                    table.setName(tableName);
-                    column.setTable(table);
-                    columns.add(column);
-                }
-                return columnCount;
-            }
-        });
+        List<Column> columns = getColumns(tableName);
 
         return jdbcTemplate.query(sql, new EntityRowMapper(columns));
     }
 
-    private String getInsertQuery(EntityRow entityRow) {
+    private List<Column> getColumns(String tableName) {
+        String sql = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '" + tableName + "';";
+        return jdbcTemplate.query(sql, new ColumnMapper(tableName));
+    }
+
+    private String getQueryForInsert(EntityRow entityRow) {
         StringJoiner attributesNames = new StringJoiner(", ");
         StringJoiner attributesValues = new StringJoiner(", ");
 
@@ -123,7 +91,7 @@ public class EntityRowDao {
                 entityRow.getTableName(), attributesNames, attributesValues);
     }
 
-    private String getUpdateQuery(EntityRow entityRow) {
+    private String getQueryForUpdate(EntityRow entityRow) {
         StringJoiner attributesValues = new StringJoiner(", ");
 
         entityRow.getAttributes().forEach((columnName, value) -> {

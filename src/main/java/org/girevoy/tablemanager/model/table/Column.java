@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @EqualsAndHashCode
 public class Column {
     private String name;
-    private Table table;
+    private String tableName;
     private DataType dataType;
 
     public void setDataType(String dataType) {

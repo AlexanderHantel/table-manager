@@ -16,12 +16,13 @@ public class EntityRowMapper implements RowMapper<EntityRow> {
     }
 
     @Override
-    public EntityRow mapRow(ResultSet resultSet, int i) throws SQLException {
+    public EntityRow mapRow(ResultSet resultSet, int i) {
         EntityRow entityRow = new EntityRow();
+        entityRow.setTableName((columns.get(0)).getTableName());
         columns.forEach(column -> {
             try {
                 if (column.getName().equals("id")) {
-                    entityRow.setId(resultSet.getInt("id"));
+                    entityRow.setId(resultSet.getLong("id"));
                 } else{
                     if (column.getDataType().equals(DataType.INT)) {
                         entityRow.getAttributes().put(column.getName(), resultSet.getInt(column.getName()));

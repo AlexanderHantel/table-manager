@@ -2,6 +2,7 @@ package org.girevoy.tablemanager;
 
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.girevoy.tablemanager.dao.EntityRowDao;
 import org.girevoy.tablemanager.model.EntityRow;
@@ -36,13 +37,16 @@ public class TableManagerApplication2 implements CommandLineRunner {
 
         EntityRowDao dao = context.getBean(EntityRowDao.class);
         dao.insert(entityRow);
+//
+//        Map<String, Object> attr2 = new LinkedHashMap<>();
+//        attr.put("param", "string222");
+//        attr.put("date", LocalDate.now());
+//        attr.put("number", 10);
+//        entityRow.setAttributes(attr);
+//
+//        int updated = dao.update(entityRow);
 
-        Map<String, Object> attr2 = new LinkedHashMap<>();
-        attr.put("param", "string222");
-        attr.put("date", LocalDate.now());
-        attr.put("number", 10);
-        entityRow.setAttributes(attr);
-
-        int updated = dao.update(entityRow);
+        List<EntityRow> list = dao.findAll("test");
+        EntityRow row = dao.findInTableById("test", 6);
     }
 }

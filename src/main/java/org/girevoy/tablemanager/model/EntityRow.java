@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class EntityRow {
-    private int id;
+    private long id;
     private String tableName;
     private Map<String, Object> attributes;
 
