@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.girevoy.tablemanager.model.EntityRow;
+import org.girevoy.tablemanager.model.Unit;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class Table {
     private String name;
     private List<Column> columns;
-    private List<EntityRow> rows;
+    private List<Unit> rows;
 
     public Table() {
         columns = new ArrayList<>();

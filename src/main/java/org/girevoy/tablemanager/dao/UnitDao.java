@@ -4,10 +4,11 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.StringJoiner;
-import org.girevoy.tablemanager.model.EntityRow;
+import org.girevoy.tablemanager.model.Unit;
 import org.girevoy.tablemanager.model.mapper.ColumnMapper;
-import org.girevoy.tablemanager.model.mapper.EntityRowMapper;
+import org.girevoy.tablemanager.model.mapper.UnitMapper;
 import org.girevoy.tablemanager.model.table.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
 import static java.lang.String.format;
 
 @Component
-public class EntityRowDao {
+public class UnitDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -26,40 +27,37 @@ public class EntityRowDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public EntityRow insert(EntityRow entityRow) throws Exception {
-        if (entityRow == null || entityRow.getTableName() == null || entityRow.getAttributes().isEmpty()) {
-            throw new Exception();
-        }
+    public Unit insert(Unit unit) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                connection -> connection.prepareStatement(getQueryForInsert(entityRow), new String[] {"id"}), keyHolder);
-        entityRow.setId((long) Objects.requireNonNull(keyHolder.getKeys()).get("id"));
+                connection -> connection.prepareStatement(getQueryForInsert(unit), new String[] {"id"}), keyHolder);
+        unit.setId((long) Objects.requireNonNull(keyHolder.getKeys()).get("id"));
 
-        return entityRow;
+        return unit;
     }
 
-    public int delete(EntityRow entityRow) {
-        String sql = format("DELETE FROM %s WHERE id=%d;", entityRow.getTableName(), entityRow.getId());
+    public int delete(String tableName, long id) {
+        String sql = format("DELETE FROM %s WHERE id=%d;", tableName, id);
         return jdbcTemplate.update(sql);
     }
 
-    public int update(EntityRow entityRow) {
-        String sql = getQueryForUpdate(entityRow);
+    public int update(Unit unit) {
+        String sql = getQueryForUpdate(unit);
         return jdbcTemplate.update(sql);
     }
 
-    public EntityRow findInTableById(String tableName, long id) {
+    public Optional<Unit> findById(String tableName, long id) {
         String sql = format("SELECT * FROM %s WHERE id=%s;", tableName, id);
         List<Column> columns = getColumns(tableName);
 
-        return jdbcTemplate.queryForObject(sql, new EntityRowMapper(columns));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UnitMapper(columns)));
     }
 
-    public List<EntityRow> findAll(String tableName) {
+    public List<Unit> findAll(String tableName) {
         String sql = "SELECT * FROM " + tableName + ";";
         List<Column> columns = getColumns(tableName);
 
-        return jdbcTemplate.query(sql, new EntityRowMapper(columns));
+        return jdbcTemplate.query(sql, new UnitMapper(columns));
     }
 
     private List<Column> getColumns(String tableName) {
@@ -67,11 +65,11 @@ public class EntityRowDao {
         return jdbcTemplate.query(sql, new ColumnMapper(tableName));
     }
 
-    private String getQueryForInsert(EntityRow entityRow) {
+    private String getQueryForInsert(Unit unit) {
         StringJoiner attributesNames = new StringJoiner(", ");
         StringJoiner attributesValues = new StringJoiner(", ");
 
-        entityRow.getAttributes().forEach((columnName, value) -> {
+        unit.getAttributes().forEach((columnName, value) -> {
             attributesNames.add(columnName);
             if (value.getClass().equals(String.class)) {
                 attributesValues.add("'" + value + "'");
@@ -88,13 +86,13 @@ public class EntityRowDao {
         });
 
         return format("INSERT INTO %s (%s) VALUES (%s);",
-                entityRow.getTableName(), attributesNames, attributesValues);
+                unit.getTableName(), attributesNames, attributesValues);
     }
 
-    private String getQueryForUpdate(EntityRow entityRow) {
+    private String getQueryForUpdate(Unit unit) {
         StringJoiner attributesValues = new StringJoiner(", ");
 
-        entityRow.getAttributes().forEach((columnName, value) -> {
+        unit.getAttributes().forEach((columnName, value) -> {
             if (value.getClass().equals(String.class)) {
                 attributesValues.add(columnName + "='" + value + "'");
             }  else {
@@ -109,6 +107,6 @@ public class EntityRowDao {
             }
         });
 
-        return format("UPDATE %s SET %s WHERE id=%d;", entityRow.getTableName(), attributesValues, entityRow.getId());
+        return format("UPDATE %s SET %s WHERE id=%d;", unit.getTableName(), attributesValues, unit.getId());
     }
 }
