@@ -44,7 +44,7 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public ResponseEntity<String> delete(String tableName, long id) {
-        if (tableName.isBlank() || id == 0) {
+        if (tableName == null || "".equals(tableName) || id == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         int deletedRows;
@@ -64,7 +64,7 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public ResponseEntity<String> update(Unit unit) {
-        if (unit.getTableName().isBlank() || unit.getId() == 0) {
+        if (unit.getTableName() == null || "".equals(unit.getTableName()) || unit.getId() == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         int updatedRows;
@@ -84,7 +84,7 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     public ResponseEntity<Unit> findById(String tableName, long id) {
-        if (tableName.isBlank() || id == 0) {
+        if (tableName == null || "".equals(tableName) || id == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
