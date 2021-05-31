@@ -29,9 +29,9 @@ public class UnitServiceImpl implements UnitService {
 
         try {
             dao.insert(unit);
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        } catch (Exception ex) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -47,12 +47,12 @@ public class UnitServiceImpl implements UnitService {
         if (tableName.isBlank() || id == 0) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
-        int deletedRows = 0;
+        int deletedRows;
         try {
             deletedRows = dao.delete(tableName, id);
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        } catch (Exception ex) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -67,12 +67,12 @@ public class UnitServiceImpl implements UnitService {
         if (unit.getTableName().isBlank() || unit.getId() == 0) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
-        int updatedRows = 0;
+        int updatedRows;
         try {
             updatedRows = dao.update(unit);
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        } catch (Exception ex) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -91,11 +91,14 @@ public class UnitServiceImpl implements UnitService {
         Optional<Unit> unit;
         try {
             unit = dao.findById(tableName, id);
-        } catch (EmptyResultDataAccessException ex) {
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
@@ -107,9 +110,11 @@ public class UnitServiceImpl implements UnitService {
         List<Unit> result;
         try {
             result = dao.findAll(tableName);
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

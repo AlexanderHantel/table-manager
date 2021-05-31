@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class Unit {
     private long id;
     private String tableName;
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     public Unit() {
         attributes = new LinkedHashMap<>();

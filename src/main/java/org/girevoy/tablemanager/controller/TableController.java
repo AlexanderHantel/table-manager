@@ -34,8 +34,9 @@ public class TableController {
     }
 
     @PatchMapping("/{tableName}")
-    public ResponseEntity<String> renameTable(@PathVariable String tableName,
-                                              @RequestParam(value = "newName") String newName) {
+    public ResponseEntity<String> renameTable(
+            @PathVariable String tableName,
+            @RequestParam(value = "newName") String newName) {
         return tableService.rename(tableName, newName);
     }
 }

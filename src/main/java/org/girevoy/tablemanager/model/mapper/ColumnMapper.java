@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.girevoy.tablemanager.model.table.Column;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 
 public class ColumnMapper implements RowMapper<Column> {
     private final String tableName;
@@ -13,7 +14,7 @@ public class ColumnMapper implements RowMapper<Column> {
     }
 
     @Override
-    public Column mapRow(ResultSet resultSet, int i) throws SQLException {
+    public Column mapRow(@NonNull ResultSet resultSet, int i) throws SQLException {
         Column column = new Column();
         column.setName(resultSet.getString("column_name"));
         String dataTypeName = resultSet.getString("data_type");
