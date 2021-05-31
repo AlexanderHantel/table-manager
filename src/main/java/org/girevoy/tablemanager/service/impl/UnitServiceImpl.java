@@ -45,7 +45,7 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public ResponseEntity<String> delete(String tableName, long id) {
         if (tableName.isBlank() || id == 0) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         int deletedRows;
         try {
@@ -65,7 +65,7 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public ResponseEntity<String> update(Unit unit) {
         if (unit.getTableName().isBlank() || unit.getId() == 0) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         int updatedRows;
         try {
@@ -85,7 +85,7 @@ public class UnitServiceImpl implements UnitService {
     @Override
     public ResponseEntity<Unit> findById(String tableName, long id) {
         if (tableName.isBlank() || id == 0) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Optional<Unit> unit;
