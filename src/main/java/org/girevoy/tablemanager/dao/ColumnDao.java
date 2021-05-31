@@ -1,6 +1,7 @@
 package org.girevoy.tablemanager.dao;
 
 import org.girevoy.tablemanager.model.table.Column;
+import org.girevoy.tablemanager.model.table.enums.DataType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -22,21 +23,21 @@ public class ColumnDao {
         jdbcTemplate.update(sqlQuery);
     }
 
-    public void delete(Column column) {
+    public void delete(String tableName, String columnName) {
         String sqlQuery = format("ALTER TABLE %s DROP COLUMN %s",
-                column.getTableName(), column.getName());
+                tableName, columnName);
         jdbcTemplate.update(sqlQuery);
     }
 
-    public void rename(Column column, String newColumnName) {
+    public void rename(String tableName, String columnName, String newColumnName) {
         String sqlQuery = format("ALTER TABLE %s RENAME COLUMN %s TO %s",
-                column.getTableName(), column.getName(), newColumnName);
+                tableName, columnName, newColumnName);
         jdbcTemplate.update(sqlQuery);
     }
 
-    public void changeType(Column column) {
+    public void changeType(String tableName, String columnName, DataType dataType) {
         String sqlQuery = format("ALTER TABLE %s ALTER COLUMN %2$s TYPE %3$s USING (\"%2$s\"::text::%3$s)",
-                column.getTableName(), column.getName(), column.getDataType().name());
+                tableName, columnName, dataType.name());
         jdbcTemplate.update(sqlQuery);
     }
 }

@@ -1,5 +1,6 @@
 package org.girevoy.tablemanager.model.table;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,8 +16,17 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Column {
+    @Schema(description = "Column name",
+            example = "parameter",
+            required = true)
     private String name;
+    @Schema(description = "Table name",
+            example = "testTable",
+            required = true)
     private String tableName;
+    @Schema(description = "Data type",
+            example = "INT",
+            required = true)
     private DataType dataType;
 
     public void setDataType(String dataType) {

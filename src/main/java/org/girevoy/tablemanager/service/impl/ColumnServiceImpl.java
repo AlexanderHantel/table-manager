@@ -2,6 +2,7 @@ package org.girevoy.tablemanager.service.impl;
 
 import org.girevoy.tablemanager.dao.ColumnDao;
 import org.girevoy.tablemanager.model.table.Column;
+import org.girevoy.tablemanager.model.table.enums.DataType;
 import org.girevoy.tablemanager.service.ColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,9 +34,9 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
-    public ResponseEntity<String> delete(Column column) {
+    public ResponseEntity<String> delete(String tableName, String columnName) {
         try {
-            columnDao.delete(column);
+            columnDao.delete(tableName, columnName);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (BadSqlGrammarException e) {
             e.printStackTrace();
@@ -47,9 +48,9 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
-    public ResponseEntity<String> rename(Column column, String newColumnName) {
+    public ResponseEntity<String> rename(String tableName, String columnName, String newColumnName) {
         try {
-            columnDao.rename(column, newColumnName);
+            columnDao.rename(tableName, columnName, newColumnName);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (BadSqlGrammarException e) {
             e.printStackTrace();
@@ -62,9 +63,9 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
-    public ResponseEntity<String> changeType(Column column) {
+    public ResponseEntity<String> changeType(String tableName, String columnName, DataType dataType) {
         try {
-            columnDao.changeType(column);
+            columnDao.changeType(tableName, columnName, dataType);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (BadSqlGrammarException e) {
             e.printStackTrace();
