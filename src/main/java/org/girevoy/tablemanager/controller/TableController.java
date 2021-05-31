@@ -1,5 +1,10 @@
 package org.girevoy.tablemanager.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.girevoy.tablemanager.model.table.Table;
 import org.girevoy.tablemanager.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +29,46 @@ public class TableController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createTable(@RequestBody Table table) {
+    @Operation(summary = "Create new table")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Table was created",
+                    content = @Content),
+            @ApiResponse(responseCode = "422", description = "Table can't be created. Table name, fields names or values are unacceptable",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content) })
+    public ResponseEntity<String> createTable(
+            @Parameter(description = "Table to be created")
+            @RequestBody Table table) {
         return tableService.create(table);
     }
 
     @DeleteMapping("/{tableName}")
-    public ResponseEntity<String> deleteTable(@PathVariable String tableName) {
+    @Operation(summary = "Delete table by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Table was deleted",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content) })
+    public ResponseEntity<String> deleteTable(
+            @Parameter(description = "Table to be deleted")
+            @PathVariable String tableName) {
         return tableService.delete(tableName);
     }
 
+    @Operation(summary = "Rename table")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Table was renamed",
+                    content = @Content),
+            @ApiResponse(responseCode = "422", description = "Table can't be renamed. New table name is unacceptable",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content) })
     @PatchMapping("/{tableName}")
     public ResponseEntity<String> renameTable(
+            @Parameter(description = "Table to be renamed")
             @PathVariable String tableName,
+            @Parameter(description = "New table name")
             @RequestParam(value = "newName") String newName) {
         return tableService.rename(tableName, newName);
     }

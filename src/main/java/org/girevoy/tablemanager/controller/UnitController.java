@@ -33,7 +33,7 @@ public class UnitController {
 
     @Operation(summary = "Insert new entity to specified table")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Entity is created",
+            @ApiResponse(responseCode = "200", description = "Entity was created",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Unit.class)) }),
             @ApiResponse(responseCode = "400", description = "Bad request. Entity, tableName or attributes can't be empty or null",
@@ -54,7 +54,7 @@ public class UnitController {
     @DeleteMapping("/{tableName}/unit/{id}")
     @Operation(summary = "Delete entity from specified table by id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Entity is deleted",
+            @ApiResponse(responseCode = "200", description = "Entity was deleted",
                     content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad request. Table name & id can't be empty or null",
                     content = @Content),
@@ -74,7 +74,7 @@ public class UnitController {
 
     @Operation(summary = "Update entity in specified table")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Entity is updated",
+            @ApiResponse(responseCode = "200", description = "Entity was updated",
                     content = @Content),
             @ApiResponse(responseCode = "400", description = "Bad request. Table name & id can't be empty or null",
                     content = @Content),

@@ -37,9 +37,6 @@ public class TableServiceImpl implements TableService {
         try {
             tableDao.delete(tableName);
             return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (BadSqlGrammarException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
