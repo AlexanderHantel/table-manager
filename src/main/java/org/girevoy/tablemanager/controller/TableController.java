@@ -48,6 +48,8 @@ public class TableController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Table was deleted",
                     content = @Content),
+            @ApiResponse(responseCode = "404", description = "Table not found",
+                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
     public ResponseEntity<String> deleteTable(

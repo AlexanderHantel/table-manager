@@ -49,7 +49,7 @@ public class ColumnController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Column was deleted",
                     content = @Content),
-            @ApiResponse(responseCode = "422", description = "Column can't be deleted. Table name, column name or data type are unacceptable",
+            @ApiResponse(responseCode = "422", description = "Column can't be deleted. Table name or column name are unacceptable",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
@@ -66,7 +66,7 @@ public class ColumnController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Column was renamed",
                     content = @Content),
-            @ApiResponse(responseCode = "422", description = "Column can't be renamed. Table name, column name or data type are unacceptable",
+            @ApiResponse(responseCode = "422", description = "Column not found or column name is unacceptable",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
@@ -85,7 +85,9 @@ public class ColumnController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Column was updated",
                     content = @Content),
-            @ApiResponse(responseCode = "422", description = "Column can't be updated. Table name, column name or data type are unacceptable",
+            @ApiResponse(responseCode = "404", description = "Column not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "422", description = "Data type can't be converted to new type",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })

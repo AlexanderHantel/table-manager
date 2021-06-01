@@ -5,6 +5,7 @@ import org.girevoy.tablemanager.model.table.Column;
 import org.girevoy.tablemanager.model.table.enums.DataType;
 import org.girevoy.tablemanager.service.ColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -55,8 +56,7 @@ public class ColumnServiceImpl implements ColumnService {
         } catch (BadSqlGrammarException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -68,6 +68,9 @@ public class ColumnServiceImpl implements ColumnService {
             columnDao.changeType(tableName, columnName, dataType);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (BadSqlGrammarException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         } catch (Exception e) {

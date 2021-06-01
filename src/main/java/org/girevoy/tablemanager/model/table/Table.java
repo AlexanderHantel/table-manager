@@ -3,6 +3,7 @@ package org.girevoy.tablemanager.model.table;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 @Setter
+@AllArgsConstructor
 @EqualsAndHashCode
 public class Table {
     @Schema(description = "Table name",
