@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
-import org.girevoy.tablemanager.model.Unit;
+import org.girevoy.tablemanager.model.Entity;
 import org.girevoy.tablemanager.model.mapper.ColumnMapper;
 import org.girevoy.tablemanager.model.mapper.UnitMapper;
 import org.girevoy.tablemanager.model.table.Column;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import static java.lang.String.format;
 
 @Component
-public class UnitDao {
+public class EntityDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -27,13 +27,13 @@ public class UnitDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Unit insert(Unit unit) {
+    public Entity insert(Entity entity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                connection -> connection.prepareStatement(getQueryForInsert(unit), new String[] {"id"}), keyHolder);
-        unit.setId((long) Objects.requireNonNull(keyHolder.getKeys()).get("id"));
+                connection -> connection.prepareStatement(getQueryForInsert(entity), new String[] {"id"}), keyHolder);
+        entity.setId((long) Objects.requireNonNull(keyHolder.getKeys()).get("id"));
 
-        return unit;
+        return entity;
     }
 
     public int delete(String tableName, long id) {
@@ -41,19 +41,19 @@ public class UnitDao {
         return jdbcTemplate.update(sql);
     }
 
-    public int update(Unit unit) {
-        String sql = getQueryForUpdate(unit);
+    public int update(Entity entity) {
+        String sql = getQueryForUpdate(entity);
         return jdbcTemplate.update(sql);
     }
 
-    public Optional<Unit> findById(String tableName, long id) {
+    public Optional<Entity> findById(String tableName, long id) {
         String sql = format("SELECT * FROM %s WHERE id=%s;", tableName, id);
         List<Column> columns = getColumns(tableName);
 
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, new UnitMapper(columns)));
     }
 
-    public List<Unit> findAll(String tableName) {
+    public List<Entity> findAll(String tableName) {
         String sql = "SELECT * FROM " + tableName + ";";
         List<Column> columns = getColumns(tableName);
 
@@ -65,11 +65,11 @@ public class UnitDao {
         return jdbcTemplate.query(sql, new ColumnMapper(tableName));
     }
 
-    private String getQueryForInsert(Unit unit) {
+    private String getQueryForInsert(Entity entity) {
         StringJoiner attributesNames = new StringJoiner(", ");
         StringJoiner attributesValues = new StringJoiner(", ");
 
-        unit.getAttributes().forEach((columnName, value) -> {
+        entity.getAttributes().forEach((columnName, value) -> {
             attributesNames.add(columnName);
             if (value.getClass().equals(String.class)) {
                 attributesValues.add("'" + value + "'");
@@ -86,13 +86,13 @@ public class UnitDao {
         });
 
         return format("INSERT INTO %s (%s) VALUES (%s);",
-                unit.getTableName(), attributesNames, attributesValues);
+                entity.getTableName(), attributesNames, attributesValues);
     }
 
-    private String getQueryForUpdate(Unit unit) {
+    private String getQueryForUpdate(Entity entity) {
         StringJoiner attributesValues = new StringJoiner(", ");
 
-        unit.getAttributes().forEach((columnName, value) -> {
+        entity.getAttributes().forEach((columnName, value) -> {
             if (value.getClass().equals(String.class)) {
                 attributesValues.add(columnName + "='" + value + "'");
             }  else {
@@ -107,6 +107,6 @@ public class UnitDao {
             }
         });
 
-        return format("UPDATE %s SET %s WHERE id=%d;", unit.getTableName(), attributesValues, unit.getId());
+        return format("UPDATE %s SET %s WHERE id=%d;", entity.getTableName(), attributesValues, entity.getId());
     }
 }

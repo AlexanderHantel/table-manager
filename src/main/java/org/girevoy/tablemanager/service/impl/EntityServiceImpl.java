@@ -2,44 +2,41 @@ package org.girevoy.tablemanager.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-import org.girevoy.tablemanager.dao.UnitDao;
-import org.girevoy.tablemanager.model.Unit;
-import org.girevoy.tablemanager.service.UnitService;
+import org.girevoy.tablemanager.dao.EntityDao;
+import org.girevoy.tablemanager.model.Entity;
+import org.girevoy.tablemanager.service.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UnitServiceImpl implements UnitService {
-    UnitDao dao;
+public class EntityServiceImpl implements EntityService {
+    EntityDao dao;
 
     @Autowired
-    public UnitServiceImpl(UnitDao dao) {
+    public EntityServiceImpl(EntityDao dao) {
         this.dao = dao;
     }
 
     @Override
-    public ResponseEntity<Unit> insert(Unit unit) {
-        if (unit == null || unit.getTableName() == null || unit.getAttributes().isEmpty()) {
+    public ResponseEntity<Entity> insert(Entity entity) {
+        if (entity == null || entity.getTableName() == null || entity.getAttributes().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         try {
-            dao.insert(unit);
+            dao.insert(entity);
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        if (unit.getId() == 0) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        }
-
-        return ResponseEntity.ok(unit);
+        return ResponseEntity.ok(entity);
     }
 
     @Override
@@ -50,8 +47,6 @@ public class UnitServiceImpl implements UnitService {
         int deletedRows;
         try {
             deletedRows = dao.delete(tableName, id);
-        } catch (DataAccessException e) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -63,13 +58,17 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public ResponseEntity<String> update(Unit unit) {
-        if (unit.getTableName() == null || "".equals(unit.getTableName()) || unit.getId() == 0) {
+    public ResponseEntity<String> update(Entity entity) {
+        if (entity.getTableName() == null ||
+            "".equals(entity.getTableName()) ||
+            entity.getId() == 0 ||
+            entity.getAttributes() == null ||
+            entity.getAttributes().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         int updatedRows;
         try {
-            updatedRows = dao.update(unit);
+            updatedRows = dao.update(entity);
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         } catch (Exception e) {
@@ -83,36 +82,33 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public ResponseEntity<Unit> findById(String tableName, long id) {
+    public ResponseEntity<Entity> findById(String tableName, long id) {
         if (tableName == null || "".equals(tableName) || id == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Optional<Unit> unit;
+        Optional<Entity> entity;
         try {
-            unit = dao.findById(tableName, id);
+            entity = dao.findById(tableName, id);
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-        return unit.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return entity.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @Override
-    public ResponseEntity<List<Unit>> findAll(String tableName) {
-        List<Unit> result;
+    public ResponseEntity<List<Entity>> findAll(String tableName) {
+        List<Entity> result;
         try {
             result = dao.findAll(tableName);
-        } catch (DataAccessException e) {
+        } catch (BadSqlGrammarException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

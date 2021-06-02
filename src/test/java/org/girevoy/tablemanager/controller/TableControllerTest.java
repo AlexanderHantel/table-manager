@@ -10,22 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@SpringBootTest
-@Sql({"/initTestDB.sql"})
+@SpringBootTest()
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@TestPropertySource(locations = "classpath:application-test.properties")
+@Sql({"/initTestDB.sql"})
 public class TableControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void createTable_shouldReturnHttpStatusOk_ifCorrectRequestBody() throws Exception {
+    public void  createTable_shouldReturnHttpStatusOk_ifCorrectRequestBody() throws Exception {
         Table table = new Table("test2", Arrays.asList(
                 new Column("col1", "test2", DataType.TEXT),
                 new Column("col2", "test2", DataType.INT),
@@ -35,9 +35,9 @@ public class TableControllerTest {
         String tableJson = gson.toJson(table);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/table")
-                                              .contentType(MediaType.APPLICATION_JSON)
-                                              .content(tableJson))
-               .andExpect(MockMvcResultMatchers.status().is(200));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(tableJson))
+                .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
@@ -51,8 +51,8 @@ public class TableControllerTest {
         String tableJson = gson.toJson(table);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/table")
-                                              .contentType(MediaType.APPLICATION_JSON)
-                                              .content(tableJson))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(tableJson))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
 
@@ -71,14 +71,14 @@ public class TableControllerTest {
     @Test
     public void renameTable_shouldReturnHttpStatus200_ifNewNameIsCorrect() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test")
-                                              .param("newName", "anyname"))
+                .param("newName", "anyname"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void renameTable_shouldReturnHttpStatus422_ifNewNameIsIncorrect() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test")
-                                              .param("newName", "table"))
+                .param("newName", "table"))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
 }

@@ -3,13 +3,13 @@ package org.girevoy.tablemanager.model.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import org.girevoy.tablemanager.model.Unit;
+import org.girevoy.tablemanager.model.Entity;
 import org.girevoy.tablemanager.model.table.Column;
 import org.girevoy.tablemanager.model.table.enums.DataType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 
-public class UnitMapper implements RowMapper<Unit> {
+public class UnitMapper implements RowMapper<Entity> {
     private final List<Column> columns;
 
     public UnitMapper(List<Column> columns) {
@@ -17,28 +17,28 @@ public class UnitMapper implements RowMapper<Unit> {
     }
 
     @Override
-    public Unit mapRow(@NonNull ResultSet resultSet, int i) throws SQLException {
-        Unit unit = new Unit();
-        unit.setTableName((columns.get(0)).getTableName());
+    public Entity mapRow(@NonNull ResultSet resultSet, int i) throws SQLException {
+        Entity entity = new Entity();
+        entity.setTableName((columns.get(0)).getTableName());
 
         for (Column column : columns) {
             if (column.getName().equals("id")) {
-                unit.setId(resultSet.getLong("id"));
+                entity.setId(resultSet.getLong("id"));
             } else{
                 if (column.getDataType().equals(DataType.INT)) {
-                    unit.getAttributes().put(column.getName(), resultSet.getInt(column.getName()));
+                    entity.getAttributes().put(column.getName(), resultSet.getInt(column.getName()));
                 } else {
                     if (column.getDataType().equals(DataType.TEXT)) {
-                        unit.getAttributes().put(column.getName(), resultSet.getString(column.getName()));
+                        entity.getAttributes().put(column.getName(), resultSet.getString(column.getName()));
                     } else {
                         if (column.getDataType().equals(DataType.DATE)) {
-                            unit.getAttributes().put(column.getName(), resultSet.getDate(column.getName()).toLocalDate());
+                            entity.getAttributes().put(column.getName(), resultSet.getDate(column.getName()).toLocalDate());
                         }
                     }
                 }
             }
         }
 
-        return unit;
+        return entity;
     }
 }

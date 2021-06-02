@@ -8,8 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
-import org.girevoy.tablemanager.model.Unit;
-import org.girevoy.tablemanager.service.UnitService;
+import org.girevoy.tablemanager.model.Entity;
+import org.girevoy.tablemanager.service.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,53 +23,51 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api", produces = "application/json")
-public class UnitController {
-    private final UnitService unitService;
+public class EntityController {
+    private final EntityService entityService;
 
     @Autowired
-    public UnitController(UnitService unitService) {
-        this.unitService = unitService;
+    public EntityController(EntityService entityService) {
+        this.entityService = entityService;
     }
 
     @Operation(summary = "Insert new entity to specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Entity was created",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Unit.class)) }),
+                            schema = @Schema(implementation = Entity.class)) }),
             @ApiResponse(responseCode = "400", description = "Bad request. Entity, tableName or attributes can't be empty or null",
                     content = @Content),
             @ApiResponse(responseCode = "422", description = "Unprocessable entity, wrong fields schema",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @PostMapping("/{tableName}/unit")
-    public ResponseEntity<Unit> insertUnit(
+    @PostMapping("/{tableName}")
+    public ResponseEntity<Entity> insertEntity(
             @Parameter(description = "Table name for entity insert")
             @PathVariable String tableName,
-            @RequestBody Unit unit) {
+            @RequestBody Entity entity) {
 
-        return unitService.insert(unit);
+        return entityService.insert(entity);
     }
 
-    @DeleteMapping("/{tableName}/unit/{id}")
     @Operation(summary = "Delete entity from specified table by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Entity was deleted",
                     content = @Content),
-            @ApiResponse(responseCode = "400", description = "Bad request. Table name & id can't be empty or null",
-                    content = @Content),
-            @ApiResponse(responseCode = "422", description = "Unprocessable entity",
+            @ApiResponse(responseCode = "400", description = "Bad request. Id can't be 0",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Entity not found, there is not such id in table",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    public ResponseEntity<String> deleteUnit(
+    @DeleteMapping("/{tableName}/{id}")
+    public ResponseEntity<String> deleteEntity(
             @Parameter(description = "Table name for entity delete")
             @PathVariable String tableName,
             @Parameter(description = "Entity id to be deleted")
             @PathVariable long id) {
-        return unitService.delete(tableName, id);
+        return entityService.delete(tableName, id);
     }
 
     @Operation(summary = "Update entity in specified table")
@@ -84,54 +82,52 @@ public class UnitController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @PatchMapping("/{tableName}/unit/{id}")
-    public ResponseEntity<String> updateUnit(
+    @PatchMapping("/{tableName}/{id}")
+    public ResponseEntity<String> updateEntity(
             @Parameter(description = "Table name for entity update")
             @PathVariable String tableName,
             @Parameter(description = "Entity id to be update")
             @PathVariable long id,
             @Parameter(description = "All entity fields will be updated in DB according to condition of this object")
-            @RequestBody Unit unit) {
+            @RequestBody Entity entity) {
 
-        unit.setId(id);
-        unit.setTableName(tableName);
-        return unitService.update(unit);
+        entity.setId(id);
+        entity.setTableName(tableName);
+        return entityService.update(entity);
     }
 
     @Operation(summary = "Find entity in specified table by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Entity was found",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Unit.class)) }),
+                            schema = @Schema(implementation = Entity.class)) }),
             @ApiResponse(responseCode = "400", description = "Bad request. Table name & id can't be empty or null",
-                    content = @Content),
-            @ApiResponse(responseCode = "422", description = "Unprocessable entity",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Entity not found, there is not such id in table",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @GetMapping("/{tableName}/unit/{id}")
-    public ResponseEntity<Unit> findById(
+    @GetMapping("/{tableName}/{id}")
+    public ResponseEntity<Entity> findById(
             @Parameter(description = "Table name for search")
             @PathVariable String tableName,
             @Parameter(description = "Entity id to be found")
             @PathVariable long id) {
-        return unitService.findById(tableName, id);
+        return entityService.findById(tableName, id);
     }
 
-    @GetMapping("/{tableName}/unit")
+    @GetMapping("/{tableName}/all")
     @Operation(summary = "Get all entities from specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Entities were found",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Unit.class)))),
-            @ApiResponse(responseCode = "422", description = "Unprocessable entity",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = Entity.class)))),
+            @ApiResponse(responseCode = "400", description = "Bad request. Wrong table name",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    public ResponseEntity<List<Unit>> findAll(
+    public ResponseEntity<List<Entity>> findAll(
             @Parameter(description = "Table name")
             @PathVariable String tableName) {
-        return unitService.findAll(tableName);
+        return entityService.findAll(tableName);
     }
 }
