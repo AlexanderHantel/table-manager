@@ -2,9 +2,9 @@
 It is a REST API for creating, editing, removing 
 tables and their content.
 
-##Services
+## Services
 Operations available for tables:
-- Create a new table with specified name
+- Create a new table with any number of columns
 - Delete table by name
 - Rename table
 - Add a new column to existing table
@@ -19,7 +19,7 @@ Operations available for tables content:
 - Get all entities from specified table
 - Delete entity
 
-##Frameworks used
+## Frameworks used
 - Maven
 - Spring Boot
 - Spring JDBCTemplate
@@ -28,7 +28,7 @@ Operations available for tables content:
 - Spring Test + JUnit5
 - SpringDoc + Swagger
 
-##Database
+## Database
 This application works with PostgreSQL. It needs two 
 databases for runtime and tests. So, you should prepare 
 your local databases before the build and run:
@@ -37,7 +37,7 @@ your local databases before the build and run:
 - Path to property file for test database: **src\test\resources\application-test.properties**
 - In these property files you can specify tablenames, username and password for DB you're just created.
 
-##Build and Run
+## Build and Run
 The app is built and run with Maven command: **$ mvn test spring-boot:run**. Press **Ctrl+C** in command line to stop the app.
 
 ##Tests
