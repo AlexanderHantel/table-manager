@@ -40,11 +40,11 @@ your local databases before the build and run:
 ## Build and Run
 The app is built and run with Maven command: **$ mvn test spring-boot:run**. Press **Ctrl+C** in command line to stop the app.
 
-##Tests
+## Tests
 Integration tests will run automatically by Maven run command, or by command **$ mvn test**, or you can run
  it manually in IDE.
 
-##Documentation
+## Documentation
 When the app is running you can see description of REST methods in Swagger UI:
 http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/  
 On the first run Liquibase will create default table "test" in runtime DB,
