@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/table", produces = "application/json")
+@RequestMapping(value = "/api", produces = "application/json")
 public class TableController {
     private final TableService tableService;
 
@@ -28,7 +28,7 @@ public class TableController {
         this.tableService = tableService;
     }
 
-    @PostMapping
+    @PostMapping("/createTable")
     @Operation(summary = "Create new table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Table was created",
@@ -43,7 +43,7 @@ public class TableController {
         return tableService.create(table);
     }
 
-    @DeleteMapping("/{tableName}")
+    @DeleteMapping("/deleteTable/{tableName}")
     @Operation(summary = "Delete table by name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Table was deleted",
@@ -66,7 +66,7 @@ public class TableController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @PatchMapping("/{tableName}")
+    @PatchMapping("/renameTable/{tableName}")
     public ResponseEntity<String> renameTable(
             @Parameter(description = "Table to be renamed")
             @PathVariable String tableName,
