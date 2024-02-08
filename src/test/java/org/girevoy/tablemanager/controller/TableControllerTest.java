@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static java.lang.String.format;
+
 @SpringBootTest()
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -24,12 +26,16 @@ public class TableControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private static final String EXISTING_TABLE_FROM_DB = "test_table";
+    private static final String TABLE_TO_BE_CREATED = "test_table2";
+
+
     @Test
     public void  createTable_shouldReturnHttpStatusOk_ifCorrectRequestBody() throws Exception {
-        Table table = new Table("test_table2", Arrays.asList(
-                new Column("column1", "test_table2", DataType.TEXT),
-                new Column("column2", "test_table2", DataType.INT),
-                new Column("column3", "test_table2", DataType.DATE)));
+        Table table = new Table(TABLE_TO_BE_CREATED, Arrays.asList(
+                new Column("column1", TABLE_TO_BE_CREATED, DataType.TEXT),
+                new Column("column2", TABLE_TO_BE_CREATED, DataType.INT),
+                new Column("column3", TABLE_TO_BE_CREATED, DataType.DATE)));
 
         Gson gson = new Gson();
         String tableJson = gson.toJson(table);
@@ -42,10 +48,10 @@ public class TableControllerTest {
 
     @Test
     public void createTable_shouldReturnHttpStatus422_ifUnacceptableTableName() throws Exception {
-        Table table = new Table("test_table", Arrays.asList(
-                new Column("column1", "test_table2", DataType.TEXT),
-                new Column("column2", "test_table2", DataType.INT),
-                new Column("column3", "test_table2", DataType.DATE)));
+        Table table = new Table(EXISTING_TABLE_FROM_DB, Arrays.asList(
+                new Column("column1", TABLE_TO_BE_CREATED, DataType.TEXT),
+                new Column("column2", TABLE_TO_BE_CREATED, DataType.INT),
+                new Column("column3", TABLE_TO_BE_CREATED, DataType.DATE)));
 
         Gson gson = new Gson();
         String tableJson = gson.toJson(table);
@@ -58,27 +64,30 @@ public class TableControllerTest {
 
     @Test
     public void deleteTable_shouldReturnHttpStatus200_ifCorrectTableName() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteTable/test_table"))
+        mockMvc.perform(MockMvcRequestBuilders.delete(format("/deleteTable/%s", EXISTING_TABLE_FROM_DB)))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void deleteTable_shouldReturnHttpStatus404_ifNoSuchTable() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteTable/any_name"))
+        String notExistingTableName = "any_name";
+        mockMvc.perform(MockMvcRequestBuilders.delete(format("/deleteTable/%s", notExistingTableName)))
                 .andExpect(MockMvcResultMatchers.status().is(404));
     }
 
     @Test
     public void renameTable_shouldReturnHttpStatus200_ifNewNameIsCorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/renameTable/test_table")
-                .param("newName", "any_name"))
+        String newTableName = "any_name";
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(format("/renameTable/%s", EXISTING_TABLE_FROM_DB))
+                .param("newName", newTableName))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void renameTable_shouldReturnHttpStatus422_ifNewNameIsIncorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/renameTable/test_table")
-                .param("newName", "test_table"))
+        mockMvc.perform(MockMvcRequestBuilders.patch(format("/renameTable/%s", EXISTING_TABLE_FROM_DB))
+                .param("newName", EXISTING_TABLE_FROM_DB))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
 }
