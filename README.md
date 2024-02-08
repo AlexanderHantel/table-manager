@@ -2,6 +2,8 @@
 It is a REST API for creating, editing, removing 
 tables and their content.
 
+The development process is planned and managed in Jira https://alexhantel.atlassian.net/jira/software/projects/TBMN/boards/1  
+
 ## Services
 Operations available for tables:
 - Create a new table with any number of columns
