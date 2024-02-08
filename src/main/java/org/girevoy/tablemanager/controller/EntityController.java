@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api", produces = "application/json")
+@RequestMapping(produces = "application/json")
 public class EntityController {
     private final EntityService entityService;
 
@@ -42,7 +42,7 @@ public class EntityController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @PostMapping("/{tableName}")
+    @PostMapping("/{tableName}/insertEntity")
     public ResponseEntity<Entity> insertEntity(
             @Parameter(description = "Table name for entity insert")
             @PathVariable String tableName,
@@ -61,7 +61,7 @@ public class EntityController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @DeleteMapping("/{tableName}/{id}")
+    @DeleteMapping("/{tableName}/deleteEntity/{id}")
     public ResponseEntity<String> deleteEntity(
             @Parameter(description = "Table name for entity delete")
             @PathVariable String tableName,
@@ -82,7 +82,7 @@ public class EntityController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @PatchMapping("/{tableName}/{id}")
+    @PatchMapping("/{tableName}/updateEntity/{id}")
     public ResponseEntity<String> updateEntity(
             @Parameter(description = "Table name for entity update")
             @PathVariable String tableName,
@@ -107,7 +107,7 @@ public class EntityController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @GetMapping("/{tableName}/{id}")
+    @GetMapping("/{tableName}/findById/{id}")
     public ResponseEntity<Entity> findById(
             @Parameter(description = "Table name for search")
             @PathVariable String tableName,
@@ -116,7 +116,7 @@ public class EntityController {
         return entityService.findById(tableName, id);
     }
 
-    @GetMapping("/{tableName}/all")
+    @GetMapping("/{tableName}/findAll")
     @Operation(summary = "Get all entities from specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Entities were found",

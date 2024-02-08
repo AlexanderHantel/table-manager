@@ -26,10 +26,10 @@ public class TableControllerTest {
 
     @Test
     public void  createTable_shouldReturnHttpStatusOk_ifCorrectRequestBody() throws Exception {
-        Table table = new Table("test2", Arrays.asList(
-                new Column("col1", "test2", DataType.TEXT),
-                new Column("col2", "test2", DataType.INT),
-                new Column("col3", "test2", DataType.DATE)));
+        Table table = new Table("test_table2", Arrays.asList(
+                new Column("column1", "test_table2", DataType.TEXT),
+                new Column("column2", "test_table2", DataType.INT),
+                new Column("column3", "test_table2", DataType.DATE)));
 
         Gson gson = new Gson();
         String tableJson = gson.toJson(table);
@@ -42,10 +42,10 @@ public class TableControllerTest {
 
     @Test
     public void createTable_shouldReturnHttpStatus422_ifUnacceptableTableName() throws Exception {
-        Table table = new Table("table", Arrays.asList(
-                new Column("col1", "test2", DataType.TEXT),
-                new Column("col2", "test2", DataType.INT),
-                new Column("col3", "test2", DataType.DATE)));
+        Table table = new Table("test_table", Arrays.asList(
+                new Column("column1", "test_table2", DataType.TEXT),
+                new Column("column2", "test_table2", DataType.INT),
+                new Column("column3", "test_table2", DataType.DATE)));
 
         Gson gson = new Gson();
         String tableJson = gson.toJson(table);
@@ -58,27 +58,27 @@ public class TableControllerTest {
 
     @Test
     public void deleteTable_shouldReturnHttpStatus200_ifCorrectTableName() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteTable/test"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteTable/test_table"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void deleteTable_shouldReturnHttpStatus404_ifNoSuchTable() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteTable/anyName"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteTable/any_name"))
                 .andExpect(MockMvcResultMatchers.status().is(404));
     }
 
     @Test
     public void renameTable_shouldReturnHttpStatus200_ifNewNameIsCorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/renameTable/test")
-                .param("newName", "anyname"))
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/renameTable/test_table")
+                .param("newName", "any_name"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void renameTable_shouldReturnHttpStatus422_ifNewNameIsIncorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/renameTable/test")
-                .param("newName", "table"))
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/renameTable/test_table")
+                .param("newName", "test_table"))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
 }
