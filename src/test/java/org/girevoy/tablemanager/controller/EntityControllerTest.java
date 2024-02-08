@@ -32,7 +32,7 @@ public class EntityControllerTest {
     @Test
     public void insertEntity_shouldReturnHttpStatusOk_ifCorrectRequestBody() throws Exception {
         Entity entity = new Entity();
-        entity.setTableName("test");
+        entity.setTableName("test_table");
 
         Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("name", "Zzz");
@@ -43,7 +43,7 @@ public class EntityControllerTest {
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/test")
+        mockMvc.perform(MockMvcRequestBuilders.post("/test_table/insertEntity")
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(200));
@@ -52,7 +52,7 @@ public class EntityControllerTest {
     @Test
     public void insertEntity_shouldReturnHttpStatus422_ifIncorrectRequestBody() throws Exception {
         Entity entity = new Entity();
-        entity.setTableName("test");
+        entity.setTableName("test_table");
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("someParam", "2021-05-31");
@@ -63,7 +63,7 @@ public class EntityControllerTest {
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/test")
+        mockMvc.perform(MockMvcRequestBuilders.post("/test_table/insertEntity")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(422));
@@ -76,7 +76,7 @@ public class EntityControllerTest {
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/test")
+        mockMvc.perform(MockMvcRequestBuilders.post("/test_table/insertEntity")
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(400));
@@ -84,19 +84,19 @@ public class EntityControllerTest {
 
     @Test
     public void deleteEntity_shouldReturnHttpStatus200_ifCorrectVariables() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/test/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/test_table/deleteEntity/1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void deleteEntity_shouldReturnHttpStatus400_ifIncorrectParameters() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/test/0"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/test_table/deleteEntity/0"))
                 .andExpect(MockMvcResultMatchers.status().is(400));
     }
 
     @Test
     public void deleteEntity_shouldReturnHttpStatus404_ifNoSuchId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/test/10"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/test_table/deleteEntity/10"))
                 .andExpect(MockMvcResultMatchers.status().is(404));
     }
 
@@ -106,12 +106,12 @@ public class EntityControllerTest {
         attributes.put("date", "2021-05-30");
         attributes.put("name", "Xxx");
         attributes.put("number", 20);
-        Entity entity = new Entity(1, "test", attributes);
+        Entity entity = new Entity(1, "test_table", attributes);
 
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/test/1")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/updateEntity/1")
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(200));
@@ -124,7 +124,7 @@ public class EntityControllerTest {
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/test/1")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/updateEntity/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(400));
@@ -136,12 +136,12 @@ public class EntityControllerTest {
         attributes.put("date", "2021-05-30");
         attributes.put("name", "Xxx");
         attributes.put("number", 20);
-        Entity entity = new Entity(1, "test", attributes);
+        Entity entity = new Entity(1, "test_table", attributes);
 
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/test/0")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/updateEntity/0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(400));
@@ -153,12 +153,12 @@ public class EntityControllerTest {
         attributes.put("someName", "2021-05-30");
         attributes.put("name", "Xxx");
         attributes.put("number", 20);
-        Entity entity = new Entity(1, "test", attributes);
+        Entity entity = new Entity(1, "test_table", attributes);
 
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/test/1")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/updateEntity/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(422));
@@ -170,12 +170,12 @@ public class EntityControllerTest {
         attributes.put("date", "2021-05-30");
         attributes.put("name", "Xxx");
         attributes.put("number", 20);
-        Entity entity = new Entity(10, "test", attributes);
+        Entity entity = new Entity(10, "test_table", attributes);
 
         Gson gson = new Gson();
         String entityJson = gson.toJson(entity);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/test/10")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/updateEntity/10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(entityJson))
                 .andExpect(MockMvcResultMatchers.status().is(404));
@@ -183,7 +183,7 @@ public class EntityControllerTest {
 
     @Test
     public void findById_shouldReturnHttpStatus200_ifRequestIsCorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/test/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
@@ -193,12 +193,12 @@ public class EntityControllerTest {
         attributes.put("date", "2021-01-05");
         attributes.put("name", "Aaaa");
         attributes.put("number", 10);
-        Entity expectedEntity = new Entity(1, "test", attributes);
+        Entity expectedEntity = new Entity(1, "test_table", attributes);
 
         Gson gson = new Gson();
         String expectedEntityJson = gson.toJson(expectedEntity);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/test/1")).andReturn();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/1")).andReturn();
         String response = result.getResponse().getContentAsString();
 
         assertEquals(expectedEntityJson, response);
@@ -206,25 +206,25 @@ public class EntityControllerTest {
 
     @Test
     public void findById_shouldReturnHttpStatus400_ifIdIs0() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/test/0"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/0"))
                 .andExpect(MockMvcResultMatchers.status().is(400));
     }
 
     @Test
     public void findById_shouldReturnHttpStatus404_ifNoSuchId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/test/10"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/10"))
                 .andExpect(MockMvcResultMatchers.status().is(404));
     }
 
     @Test
     public void findAll_shouldReturnHttpStatus200_ifCorrectRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/test/all"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findAll"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void findAll_shouldReturnHttpStatus400_ifNoSuchTable() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/someName/all"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/someTable/findAll"))
                 .andExpect(MockMvcResultMatchers.status().is(400));
     }
 
@@ -256,19 +256,18 @@ public class EntityControllerTest {
         attributes5.put("name", "Eeee");
 
         List<Entity> expectedList = Arrays.asList(
-                new Entity(1, "test", attributes1),
-                new Entity(2, "test", attributes2),
-                new Entity(3, "test", attributes3),
-                new Entity(4, "test", attributes4),
-                new Entity(5, "test", attributes5));
+                new Entity(1, "test_table", attributes1),
+                new Entity(2, "test_table", attributes2),
+                new Entity(3, "test_table", attributes3),
+                new Entity(4, "test_table", attributes4),
+                new Entity(5, "test_table", attributes5));
 
         Gson gson = new Gson();
         String expectedListJson = gson.toJson(expectedList);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/test/all")).andReturn();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findAll")).andReturn();
         String response = result.getResponse().getContentAsString();
 
-        assertEquals(response, expectedListJson);
+        assertEquals(expectedListJson, response);
     }
-
 }

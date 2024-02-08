@@ -23,39 +23,39 @@ public class ColumnControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void createColumn_shouldReturnHttpStatusOk_ifCorrectRequestBody() throws Exception {
-        Column column = new Column("col1", "test", DataType.TEXT);
+    public void addColumn_shouldReturnHttpStatusOk_ifCorrectRequestBody() throws Exception {
+        Column column = new Column("column1", "test_table", DataType.TEXT);
 
         Gson gson = new Gson();
         String columnJson = gson.toJson(column);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/table/test")
+        mockMvc.perform(MockMvcRequestBuilders.post("/test_table/addColumn")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(columnJson))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
-    public void createColumn_shouldReturnHttpStatus422_ifIncorrectRequestBody() throws Exception {
-        Column column = new Column("col1", "wrongTable", DataType.TEXT);
+    public void addColumn_shouldReturnHttpStatus422_ifIncorrectRequestBody() throws Exception {
+        Column column = new Column("column1", "wrong_table", DataType.TEXT);
 
         Gson gson = new Gson();
         String columnJson = gson.toJson(column);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/table/test")
+        mockMvc.perform(MockMvcRequestBuilders.post("/test_table/addColumn")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(columnJson))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
 
     @Test
-    public void createColumn_shouldReturnHttpStatus422_ifUnacceptableColumnName() throws Exception {
-        Column column = new Column("table", "test", DataType.TEXT);
+    public void addColumn_shouldReturnHttpStatus422_ifUnacceptableColumnName() throws Exception {
+        Column column = new Column("table", "test_table", DataType.TEXT);
 
         Gson gson = new Gson();
         String columnJson = gson.toJson(column);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/table/test")
+        mockMvc.perform(MockMvcRequestBuilders.post("/test_table/addColumn")
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(columnJson))
                 .andExpect(MockMvcResultMatchers.status().is(422));
@@ -63,33 +63,33 @@ public class ColumnControllerTest {
 
     @Test
     public void deleteColumn_shouldReturnHttpStatus200_ifCorrectPathVariables() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/table/test/name"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/test_table/deleteColumn/name"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void deleteColumn_shouldReturnHttpStatus422_ifIncorrectPathVariables() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/table/test/someColumn"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/test_table/deleteColumn/some_column"))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
 
     @Test
     public void renameColumn_shouldReturnHttpStatus200_ifCorrectPathVariablesAndParameters() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test/date/name")
-                                              .param("newColumnName", "someName"))
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/renameColumn/name")
+                                              .param("newColumnName", "some_name"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void renameColumn_shouldReturnHttpStatus422_ifIncorrectPathVariables() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test/someColumn/name")
-                                              .param("newColumnName", "someName"))
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/renameColumn/some_column")
+                                              .param("newColumnName", "some_name"))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
 
     @Test
     public void renameColumn_shouldReturnHttpStatus422_ifUnacceptableColumnName() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test/date/name")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/renameColumn/date")
                                               .param("newColumnName", "table"))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
@@ -99,7 +99,7 @@ public class ColumnControllerTest {
         Gson gson = new Gson();
         String typeJson = gson.toJson(DataType.TEXT);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test/number/type")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/changeColumnType/date")
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(typeJson))
                 .andExpect(MockMvcResultMatchers.status().is(200));
@@ -110,7 +110,7 @@ public class ColumnControllerTest {
         Gson gson = new Gson();
         String typeJson = gson.toJson(DataType.TEXT);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test/someColumn/type")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/changeColumnType/some_column")
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(typeJson))
                 .andExpect(MockMvcResultMatchers.status().is(404));
@@ -121,7 +121,7 @@ public class ColumnControllerTest {
         Gson gson = new Gson();
         String typeJson = gson.toJson(DataType.INT);
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/table/test/date/type")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/test_table/changeColumnType/date")
                                               .contentType(MediaType.APPLICATION_JSON)
                                               .content(typeJson))
                 .andExpect(MockMvcResultMatchers.status().is(422));

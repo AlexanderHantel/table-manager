@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/table", produces = "application/json")
+@RequestMapping(produces = "application/json")
 public class ColumnController {
     private final ColumnService columnService;
 
@@ -29,7 +29,7 @@ public class ColumnController {
         this.columnService = columnService;
     }
 
-    @PostMapping("/{tableName}")
+    @PostMapping("/{tableName}/addColumn")
     @Operation(summary = "Add new column to specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Column was added",
@@ -44,7 +44,7 @@ public class ColumnController {
         return columnService.add(column);
     }
 
-    @DeleteMapping("/{tableName}/{columnName}")
+    @DeleteMapping("/{tableName}/deleteColumn/{columnName}")
     @Operation(summary = "Delete column by name from specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Column was deleted",
@@ -61,7 +61,7 @@ public class ColumnController {
         return columnService.delete(tableName, columnName);
     }
 
-    @PatchMapping("/{tableName}/{columnName}/name")
+    @PatchMapping("/{tableName}/renameColumn/{columnName}")
     @Operation(summary = "Rename column of specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Column was renamed",
@@ -80,7 +80,7 @@ public class ColumnController {
         return columnService.rename(tableName, columnName, newColumnName);
     }
 
-    @PatchMapping("/{tableName}/{columnName}/type")
+    @PatchMapping("/{tableName}/changeColumnType/{columnName}")
     @Operation(summary = "Change column data type of specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Column was updated",
