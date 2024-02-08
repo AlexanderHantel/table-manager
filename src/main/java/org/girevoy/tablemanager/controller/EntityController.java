@@ -36,7 +36,8 @@ public class EntityController {
             @ApiResponse(responseCode = "200", description = "Entity was created",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Entity.class)) }),
-            @ApiResponse(responseCode = "400", description = "Bad request. Entity, tableName or attributes can't be empty or null",
+            @ApiResponse(responseCode = "400", description = "Bad request. Entity, tableName or attributes can't " +
+                    "be empty or null",
                     content = @Content),
             @ApiResponse(responseCode = "422", description = "Unprocessable entity, wrong fields schema",
                     content = @Content),

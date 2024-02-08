@@ -34,7 +34,7 @@ public class TableControllerTest {
         Gson gson = new Gson();
         String tableJson = gson.toJson(table);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/createTable")
+        mockMvc.perform(MockMvcRequestBuilders.post("/createTable")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(tableJson))
                 .andExpect(MockMvcResultMatchers.status().is(200));
@@ -50,7 +50,7 @@ public class TableControllerTest {
         Gson gson = new Gson();
         String tableJson = gson.toJson(table);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/createTable")
+        mockMvc.perform(MockMvcRequestBuilders.post("/createTable")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(tableJson))
                 .andExpect(MockMvcResultMatchers.status().is(422));
@@ -58,26 +58,26 @@ public class TableControllerTest {
 
     @Test
     public void deleteTable_shouldReturnHttpStatus200_ifCorrectTableName() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteTable/test_table"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteTable/test_table"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void deleteTable_shouldReturnHttpStatus404_ifNoSuchTable() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteTable/any_name"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/deleteTable/any_name"))
                 .andExpect(MockMvcResultMatchers.status().is(404));
     }
 
     @Test
     public void renameTable_shouldReturnHttpStatus200_ifNewNameIsCorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/renameTable/test_table")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/renameTable/test_table")
                 .param("newName", "any_name"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
     public void renameTable_shouldReturnHttpStatus422_ifNewNameIsIncorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/renameTable/test_table")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/renameTable/test_table")
                 .param("newName", "test_table"))
                 .andExpect(MockMvcResultMatchers.status().is(422));
     }
