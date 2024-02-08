@@ -182,13 +182,13 @@ public class EntityControllerTest {
     }
 
     @Test
-    public void findById_shouldReturnHttpStatus200_ifRequestIsCorrect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/1"))
+    public void findEntityById_shouldReturnHttpStatus200_ifRequestIsCorrect() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findEntityById/1"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
-    public void findById_shouldReturnEntity_ifRequestIsCorrect() throws Exception {
+    public void findEntityById_shouldReturnEntity_ifRequestIsCorrect() throws Exception {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("date", "2021-01-05");
         attributes.put("name", "Aaaa");
@@ -198,38 +198,39 @@ public class EntityControllerTest {
         Gson gson = new Gson();
         String expectedEntityJson = gson.toJson(expectedEntity);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/1")).andReturn();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findEntityById/1"))
+                .andReturn();
         String response = result.getResponse().getContentAsString();
 
         assertEquals(expectedEntityJson, response);
     }
 
     @Test
-    public void findById_shouldReturnHttpStatus400_ifIdIs0() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/0"))
+    public void findEntityById_shouldReturnHttpStatus400_ifIdIs0() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findEntityById/0"))
                 .andExpect(MockMvcResultMatchers.status().is(400));
     }
 
     @Test
-    public void findById_shouldReturnHttpStatus404_ifNoSuchId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findById/10"))
+    public void findEntityById_shouldReturnHttpStatus404_ifNoSuchId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findEntityById/10"))
                 .andExpect(MockMvcResultMatchers.status().is(404));
     }
 
     @Test
-    public void findAll_shouldReturnHttpStatus200_ifCorrectRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findAll"))
+    public void findAllEntities_shouldReturnHttpStatus200_ifCorrectRequest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findAllEntities"))
                 .andExpect(MockMvcResultMatchers.status().is(200));
     }
 
     @Test
-    public void findAll_shouldReturnHttpStatus400_ifNoSuchTable() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/someTable/findAll"))
+    public void findAllEntities_shouldReturnHttpStatus400_ifNoSuchTable() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/someTable/findAllEntities"))
                 .andExpect(MockMvcResultMatchers.status().is(400));
     }
 
     @Test
-    public void findAll_shouldReturnListOfEntities_ifCorrectRequest() throws Exception {
+    public void findAllEntities_shouldReturnListOfEntities_ifCorrectRequest() throws Exception {
         Map<String, Object> attributes1 = new LinkedHashMap<>();
         attributes1.put("date", "2021-01-05");
         attributes1.put("number", 10);
@@ -265,7 +266,8 @@ public class EntityControllerTest {
         Gson gson = new Gson();
         String expectedListJson = gson.toJson(expectedList);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findAll")).andReturn();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/test_table/findAllEntities"))
+                .andReturn();
         String response = result.getResponse().getContentAsString();
 
         assertEquals(expectedListJson, response);

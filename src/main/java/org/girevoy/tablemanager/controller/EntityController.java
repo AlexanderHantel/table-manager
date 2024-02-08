@@ -107,8 +107,8 @@ public class EntityController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    @GetMapping("/{tableName}/findById/{id}")
-    public ResponseEntity<Entity> findById(
+    @GetMapping("/{tableName}/findEntityById/{id}")
+    public ResponseEntity<Entity> findEntityById(
             @Parameter(description = "Table name for search")
             @PathVariable String tableName,
             @Parameter(description = "Entity id to be found")
@@ -116,7 +116,7 @@ public class EntityController {
         return entityService.findById(tableName, id);
     }
 
-    @GetMapping("/{tableName}/findAll")
+    @GetMapping("/{tableName}/findAllEntities")
     @Operation(summary = "Get all entities from specified table")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Entities were found",
@@ -125,7 +125,7 @@ public class EntityController {
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content) })
-    public ResponseEntity<List<Entity>> findAll(
+    public ResponseEntity<List<Entity>> findAllEntities(
             @Parameter(description = "Table name")
             @PathVariable String tableName) {
         return entityService.findAll(tableName);
