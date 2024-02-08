@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset postgres:create-multiple-tables splitStatements:true endDelimiter:;
+--changeset oleg:create-multiple-tables splitStatements:true endDelimiter:;
 DROP TABLE IF EXISTS test_table CASCADE;
 DROP TABLE IF EXISTS test_table2 CASCADE;
 DROP TABLE IF EXISTS any_name CASCADE;
